@@ -5,7 +5,7 @@
 -- Dumped from database version 13.2
 -- Dumped by pg_dump version 13.2
 
--- Started on 2021-05-27 17:42:27
+-- Started on 2021-05-30 16:55:03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,12 +23,40 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- TOC entry 206 (class 1259 OID 17975)
+-- Name: cities; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cities (
+    cities_id integer NOT NULL,
+    city_name character varying NOT NULL
+);
+
+
+ALTER TABLE public.cities OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 18162)
+-- Name: cities_cities_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.cities ALTER COLUMN cities_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.cities_cities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- TOC entry 202 (class 1259 OID 17167)
 -- Name: employers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.employers (
-    id integer NOT NULL,
+    employer_id integer NOT NULL,
     company_name character varying NOT NULL,
     web_site character varying NOT NULL,
     email_verify boolean,
@@ -60,14 +88,15 @@ ALTER TABLE public.hibernate_sequence OWNER TO postgres;
 
 CREATE TABLE public.job_positions (
     id integer NOT NULL,
-    position_name character varying NOT NULL
+    position_name character varying NOT NULL,
+    cities_id integer
 );
 
 
 ALTER TABLE public.job_positions OWNER TO postgres;
 
 --
--- TOC entry 206 (class 1259 OID 17969)
+-- TOC entry 209 (class 1259 OID 18152)
 -- Name: job_positions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -99,6 +128,43 @@ CREATE TABLE public.job_seekers (
 ALTER TABLE public.job_seekers OWNER TO postgres;
 
 --
+-- TOC entry 207 (class 1259 OID 17988)
+-- Name: jobs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.jobs (
+    id integer NOT NULL,
+    description character varying NOT NULL,
+    max_salary integer,
+    min_salary integer,
+    open_positions integer NOT NULL,
+    position_expire_date date NOT NULL,
+    is_active boolean NOT NULL,
+    created_time date NOT NULL,
+    job_position_id integer NOT NULL,
+    employer_id integer NOT NULL,
+    city_id integer NOT NULL
+);
+
+
+ALTER TABLE public.jobs OWNER TO postgres;
+
+--
+-- TOC entry 208 (class 1259 OID 17996)
+-- Name: jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.jobs ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.jobs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- TOC entry 205 (class 1259 OID 17355)
 -- Name: system_users; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -106,7 +172,8 @@ ALTER TABLE public.job_seekers OWNER TO postgres;
 CREATE TABLE public.system_users (
     system_user_id integer NOT NULL,
     first_name character varying NOT NULL,
-    last_name character varying NOT NULL
+    last_name character varying NOT NULL,
+    id integer NOT NULL
 );
 
 
@@ -127,7 +194,7 @@ CREATE TABLE public.users (
 
 ALTER TABLE public.users OWNER TO postgres;
 
--- Completed on 2021-05-27 17:42:27
+-- Completed on 2021-05-30 16:55:03
 
 --
 -- PostgreSQL database dump complete
